@@ -1,4 +1,4 @@
-name: RPA Stress Test - Simple 20 Jobs
+name: nnn
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
       target_url:
         description: 'Target URL'
         required: true
-        default: 'https://httpbin.org/status/200,404,429,503'
+        default: 'https://httpbin.org/'
       duration:
         description: 'Duration (seconds)'
         required: true
