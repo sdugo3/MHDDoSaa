@@ -1,0 +1,46 @@
+name: RPA Stress Test - Simple 20 Jobs
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'Target URL'
+        required: true
+        default: 'https://httpbin.org/status/200,404,429,503'
+      duration:
+        description: 'Duration (seconds)'
+        required: true
+        default: '45'
+      concurrency:
+        description: 'Concurrency'
+        required: true
+        default: '4'
+      max_rps:
+        description: 'Max RPS per tab'
+        required: true
+        default: '1.8'
+
+jobs:
+  stress-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        job_id: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          pip install playwright
+          playwright install chromium
+
+      - name: Run RPA script
+        run: |
+          TARGET_URL="${{ github.event.inputs.target_url }}" \
+          DURATION="${{ github.event.inputs.duration }}" \
+          CONCURRENCY="${{ github.event.inputs.concurrency }}" \
+          MAX_RPS_PER_TAB="${{ github.event.inputs.max_rps }}" \
+          REQ_PER_BATCH=3 \
+          timeout 60 python3 ply.py
+        continue-on-error: true
